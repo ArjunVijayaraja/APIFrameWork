@@ -3,6 +3,7 @@ package stepDefinitions;
 import static io.restassured.RestAssured.given;
 import static org.junit.Assert.assertEquals;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,16 +31,17 @@ public class StepDefinition extends Utils {
 	TestDataBuild data = new TestDataBuild();
 
 	@Given("Add Place Payload")
-	public void add_place_payload() {
+	public void add_place_payload() throws FileNotFoundException {
 		// Write code here that turns the phrase above into concrete actions
 		
-		resSpec = new ResponseSpecBuilder().expectStatusCode(200).expectContentType(ContentType.JSON).build();
 		req = given().spec(requestSpecification()).body(data.addPlacePayload());
 	}
 
 	@When("user calls {string} with POST http request")
 	public void user_calls_with_post_http_request(String string) {
 		// Write code here that turns the phrase above into concrete actions
+		resSpec = new ResponseSpecBuilder().expectStatusCode(200).expectContentType(ContentType.JSON).build();
+
 		response = req.when().post("/maps/api/place/add/json").then().spec(resSpec).log().body().extract().response();
 				//.asString();
 	}
