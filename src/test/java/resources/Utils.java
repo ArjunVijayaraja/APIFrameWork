@@ -1,5 +1,6 @@
-package resourses;
+package resources;
 
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,28 +16,35 @@ import io.restassured.specification.RequestSpecification;
 
 public class Utils {
 
-	RequestSpecification reqSpec;
+	public static RequestSpecification reqSpec;
 	Properties prop = new Properties();
 	
 	
 	public RequestSpecification requestSpecification() throws IOException {
-		PrintStream log = new PrintStream(new FileOutputStream("logging.txt"));
-		RestAssured.baseURI = "https://rahulshettyacademy.com";
-		//InputStream is = getClass().getClassLoader().getResourceAsStream("global.properties");
-		//prop.load(is);
-		String baseURL = getGlobalValues("baseUrl");			
-		reqSpec = new RequestSpecBuilder().setBaseUri(baseURL)
-				.addQueryParam("key", "qaclick123")
-				.addFilter(RequestLoggingFilter.logRequestTo(log))
-				.addFilter(ResponseLoggingFilter.logResponseTo(log))
-				.setContentType(ContentType.JSON).build();
-
+		
+		if(reqSpec == null)
+		{
+			PrintStream log = new PrintStream(new FileOutputStream("logging.txt"));
+			//RestAssured.baseURI = "https://rahulshettyacademy.com";
+			//InputStream is = getClass().getClassLoader().getResourceAsStream("global.properties");
+			//prop.load(is);
+			String baseURL = getGlobalValues("baseUrl");			
+			reqSpec = new RequestSpecBuilder().setBaseUri(baseURL)
+					.addQueryParam("key", "qaclick123")
+					.addFilter(RequestLoggingFilter.logRequestTo(log))
+					.addFilter(ResponseLoggingFilter.logResponseTo(log))
+					.setContentType(ContentType.JSON).build();		
+			return reqSpec;
+		}
 		return reqSpec;
+		
 	}
 	
 	public String getGlobalValues(String key) throws IOException
 	{
-		InputStream is = getClass().getClassLoader().getResourceAsStream("global.properties");
+		//InputStream is = getClass().getClassLoader().getResourceAsStream("global.properties");
+		FileInputStream is = new FileInputStream("D:\\ARJUN VIJAYARAJA\\TESTING - QA\\APIFrameWork\\src\\test\\java\\resources\\global.properties");
+		
 		prop.load(is);
 		String value = prop.getProperty(key);
 		return value;
